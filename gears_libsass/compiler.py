@@ -17,8 +17,7 @@ class LibsassCompiler(BaseCompiler):
 
     def run(self, source, include_folder):
         source = bytes(source, encoding='utf-8')
-        include_folder = include_folder.encode(sys.getfilesystemencoding())
-        return sass.compile(string=source, include_paths=[include_folder]).decode('utf-8')
+        return sass.compile(string=source, include_paths=[include_folder])
 
     def find_imports(self, path):
         dirname = os.path.dirname(path)
