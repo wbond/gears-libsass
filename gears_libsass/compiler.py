@@ -5,7 +5,7 @@ import re
 from gears.compilers import BaseCompiler
 
 
-class SCSSCompiler(BaseCompiler):
+class LibsassCompiler(BaseCompiler):
 
     result_mimetype = 'text/css'
 
@@ -18,7 +18,7 @@ class SCSSCompiler(BaseCompiler):
     def run(self, source, include_folder):
         source = bytes(source, encoding='utf-8')
         include_folder = include_folder.encode(sys.getfilesystemencoding())
-        return sass.compile_string(source, include_folder).decode('utf-8')
+        return sass.compile(string=source, include_paths=[include_folder]).decode('utf-8')
 
     def find_imports(self, path):
         dirname = os.path.dirname(path)
@@ -26,7 +26,7 @@ class SCSSCompiler(BaseCompiler):
             contents = f.read().decode('utf-8')
 
         output = []
-        for match in re.findall('^\s*@import\s+("[^"]+"|\'[^\']+\')\s*;', contents, re.I | re.M):
+        for match in re.findall(r'^\s*@import\s+("[^"]+"|\'[^\']+\')\s*;', contents, re.I | re.M):
             # Figure out what folder it should be in first. If the import
             # includes a folder name:
             #
